@@ -1,0 +1,28 @@
+{
+  "name": "complete_api_rest_node",
+  "version": "1.0.0",
+  "description": "This is an example of a complete API REST with node, mongoose and express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peretch/complete_API_REST_node.git"
+  },
+  "author": "sebastian@peretch.com",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "express": "4.17.1",
+    "mongoose": "5.7.7"
+  },
+  "devDependencies": {
+    "nodemon": "1.19.4"
+  },
+  "bugs": {
+    "url": "https://github.com/peretch/complete_API_REST_node/issues"
+  },
+  "homepage": "https://github.com/peretch/complete_API_REST_node#readme"
+}
