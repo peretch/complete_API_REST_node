@@ -233,7 +233,18 @@ module.exports = (app) => {
 
         Goal.findByIdAndDelete(goalId)
                 .then((doc) => {
-                    
+                    res
+                        .status(200)
+                        .json({
+                            goal: doc
+                        });
+                })
+                .catch((err) => {
+                    res
+                        .status(400)
+                        .json({
+                            error: err.message
+                        });
                 })
     });
 
