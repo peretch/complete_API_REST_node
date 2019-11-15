@@ -1,3 +1,5 @@
+const express = require('express');
+
 const { json } = require('body-parser');
 const { sign, decode } = require('jsonwebtoken');
 const { compare, hash } = require('bcrypt');
@@ -10,9 +12,12 @@ const Goal = require('../models/goal.model');
 const JWT_SECRET = 'cualquierCosa';
 
 module.exports = (app) => {
-    
+    'use strict';
+
+    var router = express.Router();
+
     // Endpoints USERS
-    app.post('/users', json(), (req, res) => {
+    router.post('/users', json(), (req, res) => {
         const userBody = req.body;
 
         hash(userBody.password, 10)
@@ -47,7 +52,7 @@ module.exports = (app) => {
     });
 
     // Endpoints session
-    app.post('/sessions', json(), (req, res) => {
+    router.post('/sessions', json(), (req, res) => {
         const userBody = req.body;
 
         User.findOne({ email: userBody.email })
@@ -78,7 +83,7 @@ module.exports = (app) => {
     })
 
     // Endpoints TEAMS
-    app.get('/teams', checkJwt({ secret: JWT_SECRET }), (req, res) => {
+    router.get('/teams', checkJwt({ secret: JWT_SECRET }), (req, res) => {
         // const auth = req.get("Authorization");
         // const { email } = decode(auth.split(" ")[1]);
         
@@ -99,7 +104,7 @@ module.exports = (app) => {
             });
     });
     
-    app.get('/teams/:code', checkJwt({ secret: JWT_SECRET }), (req, res) => {
+    router.get('/teams/:code', checkJwt({ secret: JWT_SECRET }), (req, res) => {
         const code = req.params.code;
 
         Team.findOne({code})
@@ -119,7 +124,7 @@ module.exports = (app) => {
             });
     });
 
-    app.post('/teams', checkJwt({ secret: JWT_SECRET }), json(), (req, res) => {
+    router.post('/teams', checkJwt({ secret: JWT_SECRET }), json(), (req, res) => {
         const teamBody = req.body;
         res.json({body: teamBody});
 
@@ -140,7 +145,7 @@ module.exports = (app) => {
                 });
     });
 
-    app.delete('/teams/:code', checkJwt({ secret: JWT_SECRET }), (req, res) => {
+    router.delete('/teams/:code', checkJwt({ secret: JWT_SECRET }), (req, res) => {
         const code = req.params.code;
 
         Team.deleteOne({code})
@@ -161,7 +166,7 @@ module.exports = (app) => {
     });
 
     // Endpoints GOALS
-    app.get('/goals', checkJwt({ secret: JWT_SECRET }), json(), (req, res) => {
+    router.get('/goals', checkJwt({ secret: JWT_SECRET }), json(), (req, res) => {
         Goal.find({})
             .populate('teamFor')
             .populate('teamTo')
@@ -181,7 +186,7 @@ module.exports = (app) => {
             });
     });
     
-    app.get('/goals/:goalId', checkJwt({ secret: JWT_SECRET }), (req, res) => {
+    router.get('/goals/:goalId', checkJwt({ secret: JWT_SECRET }), (req, res) => {
         const goalId = req.params.goalId;
 
         Goal.findById(goalId)
@@ -203,7 +208,7 @@ module.exports = (app) => {
             });
     });
 
-    app.post('/goals', checkJwt({ secret: JWT_SECRET }), json(), (req, res) => {
+    router.post('/goals', checkJwt({ secret: JWT_SECRET }), json(), (req, res) => {
         const goalBody = req.body;
 
         Goal.create(goalBody)
@@ -223,9 +228,14 @@ module.exports = (app) => {
                 })
     });
 
-    app.delete('/goals/:teamId', checkJwt({ secret: JWT_SECRET }), (req, res) => {
-        res.json({
-            message: "Not implemented"
-        })
+    router.delete('/goals/:goalId', checkJwt({ secret: JWT_SECRET }), (req, res) => {
+        const goalId = req.params.goalId;
+
+        Goal.findByIdAndDelete(goalId)
+                .then((doc) => {
+                    
+                })
     });
+
+    app.use('/v1', router);
 }
