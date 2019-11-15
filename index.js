@@ -17,7 +17,7 @@ mongoose.connect('mongodb://localhost/clase10', {
 
         setRoutes(app);
 
-        app.listen(8080, () => {
+        app.listen(3000, () => {
             console.log('Servidor listo para recibir conexiones');
         });
     })
